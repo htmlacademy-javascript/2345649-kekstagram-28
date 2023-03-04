@@ -1,7 +1,7 @@
 const LIKES_MIN_COUNT = 15;
 const LIKES_MAX_COUNT = 200;
 const COMMENTS_MAX_COUNT = 5;
-const PHOTOS_COUNT = 2; //25
+const PHOTOS_COUNT = 25;
 
 const NAMES = [
   'Иван',
