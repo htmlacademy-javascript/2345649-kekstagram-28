@@ -1,5 +1,7 @@
-const onThumbnailClick = (evt) => {
+const thumbnailClickerGenerator = (photos) => (evt) => {
   evt.preventDefault();
+  const photoId = evt.target.parentNode.dataset.photoId;
+  showBigPicture(photos.find((photo) => photo.id === parseInt(photoId, 10)));
 };
 
 const createThumbnail = (template, photo) => {
@@ -16,6 +18,8 @@ export const createThumbnails = (photos) => {
 
   for (const photo of photos) {
     const thumbnail = createThumbnail(templateContent, photo);
+    thumbnail.dataset.photoId = photo.id;
+    const onThumbnailClick = thumbnailClickerGenerator(photos);
     thumbnail.addEventListener('click', onThumbnailClick);
     fragment.append(thumbnail);
   }
@@ -26,7 +30,8 @@ export const createThumbnails = (photos) => {
 
 const bigPicture = document.querySelector('.big-picture');
 const closeButton = bigPicture.querySelector('.big-picture__cancel');
-
+const comments = bigPicture.querySelector('.social__comments');
+const liElement = comments.querySelector('li');
 
 const onCloseButtonClick = () => {
   closeBigPicture();
@@ -48,8 +53,6 @@ function closeBigPicture() {
 }
 
 const fillComments = (photoComments) => {
-  const comments = bigPicture.querySelector('.social__comments');
-  const liElement = comments.querySelector('li');
   comments.innerHTML = '';
   for (const {avatar, name, message} of photoComments) {
     const newComment = liElement.cloneNode(true);

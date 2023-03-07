@@ -4,4 +4,4 @@ import { generatePhotos } from './data.js';
 const dummyPhotos = generatePhotos();
 createThumbnails(dummyPhotos);
 
-showBigPicture(dummyPhotos[0]);
+// showBigPicture(dummyPhotos[0]);
