@@ -1,4 +1,4 @@
-import {createRandomIdGenerator, getRandomInteger, createIdGenerator} from './utils.js';
+import {getRandomElement, createUniqueRandomIdGenerator, getRandomInteger, createIdGenerator} from './utils.js';
 
 const LIKES_MIN_COUNT = 15;
 const LIKES_MAX_COUNT = 200;
@@ -38,11 +38,10 @@ const DESCRIPTIONS = [
   'Черно-белое фото с уличным граффити в качестве фона. На этой фотографии запечатлено уличное граффити в качестве фона. Черно-белая гамма делает фото особенным и запоминающимся, а граффити добавляет динамики и стиля.',
 ];
 
-const getRandomCommentId = createRandomIdGenerator(1, 1000);
+const getRandomCommentId = createUniqueRandomIdGenerator(1, 1000);
 const getAvatarPath = () => `img/avatar-${getRandomInteger(1, 6)}.svg`;
-const getRandomElement = (array) => array[getRandomInteger(0, array.length - 1)];
 const generateMessage = () => {
-  const getRandomUniqueMessageId = createRandomIdGenerator(0, MESSAGES.length - 1);
+  const getRandomUniqueMessageId = createUniqueRandomIdGenerator(0, MESSAGES.length - 1);
   let message = '';
   for (let i = 1; i <= getRandomInteger(1, 2); i++){
     message = message.concat(MESSAGES[getRandomUniqueMessageId()], ' ');
@@ -63,15 +62,12 @@ const generateComment = () => {
   };
 };
 
+const getUniquePhotoId = createUniqueRandomIdGenerator(1, 25);
 const getPhotoId = createIdGenerator();
-const getPhotoUrl = () => {
-  const getRandomPhotoId = createRandomIdGenerator(1, 25);
-  return `photos/${getRandomPhotoId()}.jpg`;
-};
 
 const generatePhoto = () => {
   const id = getPhotoId();
-  const url = getPhotoUrl();
+  const url = `photos/${getUniquePhotoId()}.jpg`;
   const description = getRandomElement(DESCRIPTIONS);
   const likes = getRandomInteger(LIKES_MIN_COUNT, LIKES_MAX_COUNT);
   const comments = Array.from({ length: getRandomInteger(0, COMMENTS_MAX_COUNT) }, generateComment);
