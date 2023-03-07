@@ -31,3 +31,5 @@ export const createUniqueRandomIdGenerator = function (min, max) {
 };
 
 export const getRandomElement = (array) => array[getRandomInteger(0, array.length - 1)];
+
+export const isEscapeKey = (evt) => evt.key === 'Escape';
