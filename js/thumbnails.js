@@ -1,6 +1,6 @@
 import { showBigPicture } from './big-picture.js';
 
-const thumbnailClickHandlerGenerator = (photos) => (evt) => {
+const getThumbnailClickHandler = (photos) => (evt) => {
   evt.preventDefault();
   const photoId = evt.target.parentNode.dataset.photoId;
   showBigPicture(photos.find((photo) => photo.id === parseInt(photoId, 10)));
@@ -19,7 +19,7 @@ const createThumbnail = (template, photo) => {
 export const createThumbnails = (photos) => {
   const fragment = document.createDocumentFragment();
   const templateContent = document.querySelector('#picture').content;
-  const onThumbnailClick = thumbnailClickHandlerGenerator(photos);
+  const onThumbnailClick = getThumbnailClickHandler(photos);
 
   for (const photo of photos) {
     const thumbnail = createThumbnail(templateContent, photo);
