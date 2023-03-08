@@ -2,7 +2,7 @@ import {getRandomElement, createUniqueRandomIdGenerator, getRandomInteger, creat
 
 const LIKES_MIN_COUNT = 15;
 const LIKES_MAX_COUNT = 200;
-const COMMENTS_MAX_COUNT = 5;
+const COMMENTS_MAX_COUNT = 14;
 const PHOTOS_COUNT = 25;
 
 const NAMES = [
