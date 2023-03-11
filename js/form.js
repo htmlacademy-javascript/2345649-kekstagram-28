@@ -31,26 +31,8 @@ const onInputKeyDown = (evt) => {
   }
 };
 
-// const onInputFocus = () => {
-//   document.removeEventListener('keydown', onImageLoadEscKeyDown);
-// };
-
-// const onInputBlur = () => {
-//   document.addEventListener('keydown', onImageLoadEscKeyDown);
-// };
-
-// const useDevelopmentSettings = () => {
-//   uploadImageOverlay.scrollTo(0, 3000);
-//   document.querySelector('.text__hashtags').value = '#hash';
-//   uploadImageInput.required = false;
-// };
-
-const resetForm = () => {
-  uploadImageForm.reset();
-};
-
 function closeImageLoadModal () {
-  resetForm();
+  uploadImageForm.reset();
 
   document.body.classList.remove('modal-open');
   uploadImageOverlay.classList.add('hidden');
@@ -94,8 +76,6 @@ const onImageSelect = () => {
   };
   reader.readAsDataURL(uploadImageInput.files[0]);
 
-  // useDevelopmentSettings(); // For development luxury only
-
   const uploadCancelBotton = document.querySelector('#upload-cancel');
   uploadCancelBotton.addEventListener('click', onImageLoadCloseClick);
   document.addEventListener('keydown', onImageLoadEscKeyDown);
@@ -108,9 +88,4 @@ export const configureUploadImageForm = () => {
   commentInput.addEventListener('keydown', onInputKeyDown);
 
   pristine.addValidator(hashtagInput, validateHashtags, 'Неверный формат хэштэгов');
-  // hashtagInput.addEventListener('focus', onInputFocus);
-  // hashtagInput.addEventListener('blur', onInputBlur);
-
-  // commentInput.addEventListener('focus', onInputFocus);
-  // commentInput.addEventListener('blur', onInputBlur);
 };
