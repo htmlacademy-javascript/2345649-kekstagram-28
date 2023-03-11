@@ -14,7 +14,7 @@ export const getRandomInteger = (a, b) => {
   return Math.floor(result);
 };
 
-export const createUniqueRandomIdGenerator = function (min, max) {
+export const createUniqueRandomIdGenerator = (min, max) => {
   const generatedValues = [];
 
   return function () {

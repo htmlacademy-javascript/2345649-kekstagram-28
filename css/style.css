@@ -1408,3 +1408,12 @@ main {
 .hidden {
   display: none;
 }
+
+/* Ошибки валидации*/
+
+.form__error {
+  color: red;
+  display: block;
+  margin-top: -20px;
+  margin-bottom: 20px;
+}

@@ -80,6 +80,4 @@ const generatePhoto = () => {
   };
 };
 
-export const generatePhotos = function () {
-  return Array.from({ length: PHOTOS_COUNT }, generatePhoto);
-};
+export const generatePhotos = () => Array.from({ length: PHOTOS_COUNT }, generatePhoto);

@@ -66,7 +66,7 @@ function closeBigPicture() {
   document.removeEventListener('keydown', onEscKeyDown);
 }
 
-export function showBigPicture(photo) {
+export const showBigPicture = (photo) => {
   fillTemplate(photo);
 
   bigPicture.classList.remove('hidden');
@@ -75,4 +75,4 @@ export function showBigPicture(photo) {
   showMoreElement.addEventListener('click', onShowMoreClick);
   closeButtonElement.addEventListener('click', onCloseButtonClick);
   document.addEventListener('keydown', onEscKeyDown);
-}
+};
