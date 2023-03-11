@@ -4,70 +4,70 @@ const uploadImageInput = document.querySelector('#upload-file');
 const uploadImageOverlay = document.querySelector('.img-upload__overlay');
 const uploadImageForm = document.querySelector('#upload-select-image');
 const hashtagInput = document.querySelector('.text__hashtags');
+const commentInput = document.querySelector('.text__description');
+const imageUploadPreview = document.querySelector('.img-upload__preview > img');
+
+const pristine = new Pristine(uploadImageForm, {
+  classTo: 'img-upload__field-wrapper',
+  errorTextParent: 'img-upload__field-wrapper',
+  errorTextTag: 'span',
+  errorTextClass: 'form__error',
+});
 
 const onImageLoadCloseClick = () => {
-  cancelImageLoad();
+  closeImageLoadModal();
 };
 
-const onEscKeyDown = (evt) => {
+const onImageLoadEscKeyDown = (evt) => {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
-    cancelImageLoad();
+    closeImageLoadModal();
   }
 };
 
-// const stopEscPropagation = (evt) => {
-//   if (isEscapeKey(evt)) {
-//     evt.stopPropagation();
-//   }
-// };
-
-// const onHashtagFocus = () => {
-//   document.addEventListener('keydown', () => stopEscPropagation, {once: true});
-// };
-
-// const onHashtagBlur = () => {
-//   document.removeEventListener('keydown', () => stopEscPropagation);
-// };
-
-const useDevelopmentSettings = () => {
-  uploadImageOverlay.scrollTo(0, 3000);
-  document.querySelector('.text__hashtags').value = '#hash #hash #thisisveryverylongha # #hashwith#hash noreallyhash';
-  uploadImageInput.required = false;
+const onInputKeyDown = (evt) => {
+  if (isEscapeKey(evt)) {
+    evt.stopPropagation();
+  }
 };
 
-const onImageLoad = () => {
-  uploadImageOverlay.classList.remove('hidden');
-  document.body.classList.add('modal-open');
+// const onInputFocus = () => {
+//   document.removeEventListener('keydown', onImageLoadEscKeyDown);
+// };
 
-  useDevelopmentSettings();
+// const onInputBlur = () => {
+//   document.addEventListener('keydown', onImageLoadEscKeyDown);
+// };
 
-  document.querySelector('#upload-cancel').addEventListener('click', onImageLoadCloseClick);
-  document.addEventListener('keydown', onEscKeyDown);
-};
+// const useDevelopmentSettings = () => {
+//   uploadImageOverlay.scrollTo(0, 3000);
+//   document.querySelector('.text__hashtags').value = '#hash';
+//   uploadImageInput.required = false;
+// };
 
 const resetForm = () => {
-  // uploadImageInput.value = '';
-  // document.querySelector('.text__description').value = '';
-  // document.querySelector('.text__hashtags').value = '';
   uploadImageForm.reset();
 };
 
+function closeImageLoadModal () {
+  resetForm();
 
-const validateHashtag = (hashtag) => {
-  const tag = String(hashtag.substring(1));
-  const isValid =
-  hashtag.startsWith('#') &&
-  hashtag.length > 1 &&
-  hashtag.length <= 20 &&
-  tag === tag.match('[а-яa-z0-9]+')[0];
-  return {
-    hashtag,
-    isValid
-  };
+  document.body.classList.remove('modal-open');
+  uploadImageOverlay.classList.add('hidden');
+
+  document.removeEventListener('keydown', onImageLoadEscKeyDown);
+}
+
+const onImageSubmit = (evt) => {
+  evt.preventDefault();
+  if (pristine.validate()) {
+    uploadImageForm.submit();
+    closeImageLoadModal();
+  }
 };
 
-const hashTagsIsUnique = (hashTags) => {
+const validateHashtag = (hashtag) => new RegExp('^#[а-яёa-z0-9]{1,19}$').test(hashtag);
+const hashtagsIsUnique = (hashTags) => {
   for (const tag of hashTags) {
     if (hashTags.reduce((acc, cur) => {
       if (cur === tag) {
@@ -79,33 +79,38 @@ const hashTagsIsUnique = (hashTags) => {
   }
   return true;
 };
-
-const validateHashtags = () => {
-  const hashTags = hashtagInput.value?.toLowerCase().split(' ');
-  const isValid = hashTags.every(validateHashtag) && hashTags.length <= 55 && hashTagsIsUnique(hashTags);
-  return hashTags.map(validateHashtag).forEach((it) => it.isValid ? console.log(it) : console.error(it));
+const validateHashtags = (value) => {
+  const hashtags = value?.toLowerCase().split(' ').filter((tag) => tag !== '');
+  return hashtags.length <= 5 && hashtagsIsUnique(hashtags) && hashtags.every(validateHashtag);
 };
 
-function cancelImageLoad () {
-  resetForm();
-  document.body.classList.remove('modal-open');
-  uploadImageOverlay.classList.add('hidden');
-  document.removeEventListener('keydown', onEscKeyDown);
-}
+const onImageSelect = () => {
+  uploadImageOverlay.classList.remove('hidden');
+  document.body.classList.add('modal-open');
 
-const onImageSubmit = (evt) => {
-  evt.preventDefault();
-  validateHashtags();
+  const reader = new FileReader();
+  reader.onload = function(event) {
+    imageUploadPreview.src = event.target.result;
+  };
+  reader.readAsDataURL(uploadImageInput.files[0]);
 
-  // hashtagInput.removeEventListener('focus', () => onHashtagFocus);
-  // hashtagInput.removeEventListener('blur', () => onHashtagBlur);
+  // useDevelopmentSettings(); // For development luxury only
+
+  const uploadCancelBotton = document.querySelector('#upload-cancel');
+  uploadCancelBotton.addEventListener('click', onImageLoadCloseClick);
+  document.addEventListener('keydown', onImageLoadEscKeyDown);
 };
 
 export const configureUploadImageForm = () => {
-  onImageLoad();
-  // uploadFileInput.addEventListener('change', onImageLoad);
-  // hashtagInput.addEventListener('focus', () => onHashtagFocus);
-  // hashtagInput.addEventListener('blur', () => onHashtagBlur);
+  uploadImageInput.addEventListener('change', onImageSelect);
   uploadImageForm.addEventListener('submit', onImageSubmit);
-  // let pristine = new Pristine(uploadImageForm);
+  hashtagInput.addEventListener('keydown', onInputKeyDown);
+  commentInput.addEventListener('keydown', onInputKeyDown);
+
+  pristine.addValidator(hashtagInput, validateHashtags, 'Неверный формат хэштэгов');
+  // hashtagInput.addEventListener('focus', onInputFocus);
+  // hashtagInput.addEventListener('blur', onInputBlur);
+
+  // commentInput.addEventListener('focus', onInputFocus);
+  // commentInput.addEventListener('blur', onInputBlur);
 };
