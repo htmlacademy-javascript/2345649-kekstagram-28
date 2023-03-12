@@ -1,4 +1,4 @@
-import {getRandomElement, createUniqueRandomIdGenerator, getRandomInteger, createIdGenerator} from './utils.js';
+import {getRandomElement, createUniqueRandomIdGenerator, getRandomInteger, createIdGenerator} from './utils/misc.js';
 
 const LIKES_MIN_COUNT = 15;
 const LIKES_MAX_COUNT = 200;
