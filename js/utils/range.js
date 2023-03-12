@@ -1,11 +1,11 @@
 export class Range {
   #value;
 
-  constructor(min = 0, max = 100, step = 1, value = 100) {
+  constructor(min = 0, max = 100, step = 1, value) {
     this.min = min;
     this.max = max;
     this.step = step;
-    this.#value = value;
+    this.#value = value || max;
   }
 
   increase() {
