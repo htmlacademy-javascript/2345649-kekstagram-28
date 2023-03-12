@@ -1,4 +1,5 @@
-import { isEscapeKey } from './utils.js';
+import { isEscapeKey } from './utils/misc.js';
+import {initScaler} from './scaler.js';
 
 const uploadImageInput = document.querySelector('#upload-file');
 const uploadImageOverlay = document.querySelector('.img-upload__overlay');
@@ -88,4 +89,6 @@ export const configureUploadImageForm = () => {
   commentInput.addEventListener('keydown', onInputKeyDown);
 
   pristine.addValidator(hashtagInput, validateHashtags, 'Неверный формат хэштэгов');
+
+  initScaler();
 };
