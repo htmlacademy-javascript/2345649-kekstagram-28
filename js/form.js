@@ -1,4 +1,6 @@
-import { isEscapeKey } from './utils.js';
+import { isEscapeKey } from './utils/misc.js';
+import {initScaler, resetScale} from './scaler.js';
+import { initEffects, resetEffects } from './effects.js';
 
 const uploadImageInput = document.querySelector('#upload-file');
 const uploadImageOverlay = document.querySelector('.img-upload__overlay');
@@ -76,6 +78,8 @@ const onImageSelect = () => {
   };
   reader.readAsDataURL(uploadImageInput.files[0]);
 
+  resetScale();
+  resetEffects();
   const uploadCancelBotton = document.querySelector('#upload-cancel');
   uploadCancelBotton.addEventListener('click', onImageLoadCloseClick);
   document.addEventListener('keydown', onImageLoadEscKeyDown);
@@ -88,4 +92,7 @@ export const configureUploadImageForm = () => {
   commentInput.addEventListener('keydown', onInputKeyDown);
 
   pristine.addValidator(hashtagInput, validateHashtags, 'Неверный формат хэштэгов');
+
+  initScaler();
+  initEffects();
 };
