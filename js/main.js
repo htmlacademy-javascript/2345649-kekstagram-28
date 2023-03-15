@@ -1,7 +1,7 @@
 import { createThumbnails } from './thumbnails.js';
-import { generatePhotos } from './data.js';
 import { configureUploadImageForm } from './form.js';
+import { loadPhotos } from './api.js';
+import { showAlert } from './utils/misc.js';
 
-const dummyPhotos = generatePhotos();
-createThumbnails(dummyPhotos);
+loadPhotos(createThumbnails, () => showAlert('Ошибка загрузки с сервера'));
 configureUploadImageForm();

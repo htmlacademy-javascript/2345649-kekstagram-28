@@ -8,6 +8,7 @@ const uploadImageForm = document.querySelector('#upload-select-image');
 const hashtagInput = document.querySelector('.text__hashtags');
 const commentInput = document.querySelector('.text__description');
 const imageUploadPreview = document.querySelector('.img-upload__preview > img');
+const formSubmitButton = document.querySelector('#upload-submit');
 
 const pristine = new Pristine(uploadImageForm, {
   classTo: 'img-upload__field-wrapper',
@@ -33,9 +34,30 @@ const onInputKeyDown = (evt) => {
   }
 };
 
-function closeImageLoadModal () {
-  uploadImageForm.reset();
+const blockSubmitButton = () => {
+  formSubmitButton.textContent = 'Отправка...';
+  formSubmitButton.disabled = true;
+};
 
+const unblockSubmitButton = () => {
+  formSubmitButton.textContent = 'Опубликовать';
+  formSubmitButton.disabled = false;
+};
+
+const showSuccessMessage = () => {
+  const template = document.querySelector('#success').content;
+  document.body.append(template.querySelector('.success').cloneNode(true));
+};
+
+const showErrorMessage = () => {
+  const template = document.querySelector('#error').content;
+  document.body.append(template.querySelector('.error').cloneNode(true));
+};
+
+function closeImageLoadModal () {
+  unblockSubmitButton();
+  uploadImageForm.reset();
+  showSuccessMessage();
   document.body.classList.remove('modal-open');
   uploadImageOverlay.classList.add('hidden');
 
@@ -45,8 +67,17 @@ function closeImageLoadModal () {
 const onImageSubmit = (evt) => {
   evt.preventDefault();
   if (pristine.validate()) {
-    uploadImageForm.submit();
-    closeImageLoadModal();
+    blockSubmitButton();
+    // uploadImageForm.submit();
+    fetch('https://28.javascript.pages.academy/kekstagram', {
+      method: 'POST',
+      body: new FormData(evt.target)
+    })
+      .then(closeImageLoadModal)
+      .catch(() => {
+        showErrorMessage();
+        unblockSubmitButton();
+      });
   }
 };
 
