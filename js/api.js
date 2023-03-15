@@ -1,4 +1,4 @@
-export const loadPhotos = (cb, onError) => {
+export const loadPhotos = (onSuccess, onError) => {
   fetch('https://28.javascript.pages.academy/kekstagram/data')
     .then((response) => {
       if (response.ok) {
@@ -7,6 +7,6 @@ export const loadPhotos = (cb, onError) => {
 
       onError();
     })
-    .then((data) => cb(data))
+    .then((data) => onSuccess(data))
     .catch(() => onError());
 };

@@ -1,6 +1,7 @@
-import { isEscapeKey } from './utils/misc.js';
-import {initScaler, resetScale} from './scaler.js';
+import { onEscKeyDown, isEscapeKey } from './utils/misc.js';
+import { initScaler, resetScale } from './scaler.js';
 import { initEffects, resetEffects } from './effects.js';
+import { showErrorModal, showSuccessModal } from './modal.js';
 
 const uploadImageInput = document.querySelector('#upload-file');
 const uploadImageOverlay = document.querySelector('.img-upload__overlay');
@@ -21,12 +22,7 @@ const onImageLoadCloseClick = () => {
   closeImageLoadModal();
 };
 
-const onImageLoadEscKeyDown = (evt) => {
-  if (isEscapeKey(evt)) {
-    evt.preventDefault();
-    closeImageLoadModal();
-  }
-};
+const onImageLoadEscKeyDown = (evt) => onEscKeyDown(evt, closeImageLoadModal);
 
 const onInputKeyDown = (evt) => {
   if (isEscapeKey(evt)) {
@@ -44,38 +40,25 @@ const unblockSubmitButton = () => {
   formSubmitButton.disabled = false;
 };
 
-const showSuccessMessage = () => {
-  const template = document.querySelector('#success').content;
-  document.body.append(template.querySelector('.success').cloneNode(true));
-};
-
-const showErrorMessage = () => {
-  const template = document.querySelector('#error').content;
-  document.body.append(template.querySelector('.error').cloneNode(true));
-};
-
-function closeImageLoadModal () {
-  unblockSubmitButton();
-  uploadImageForm.reset();
-  showSuccessMessage();
-  document.body.classList.remove('modal-open');
-  uploadImageOverlay.classList.add('hidden');
-
-  document.removeEventListener('keydown', onImageLoadEscKeyDown);
-}
-
 const onImageSubmit = (evt) => {
   evt.preventDefault();
   if (pristine.validate()) {
     blockSubmitButton();
-    // uploadImageForm.submit();
     fetch('https://28.javascript.pages.academy/kekstagram', {
       method: 'POST',
       body: new FormData(evt.target)
     })
-      .then(closeImageLoadModal)
+      .then((response) => {
+        if (response.ok) {
+          showSuccessModal();
+          closeImageLoadModal();
+        } else {
+          throw new Error('Ошибка отправки данных');
+        }
+      })
       .catch(() => {
-        showErrorMessage();
+        document.removeEventListener('keydown', onImageLoadEscKeyDown);
+        showErrorModal(onImageLoadEscKeyDown);
         unblockSubmitButton();
       });
   }
@@ -115,6 +98,15 @@ const onImageSelect = () => {
   uploadCancelBotton.addEventListener('click', onImageLoadCloseClick);
   document.addEventListener('keydown', onImageLoadEscKeyDown);
 };
+
+function closeImageLoadModal () {
+  unblockSubmitButton();
+  uploadImageForm.reset();
+  document.body.classList.remove('modal-open');
+  uploadImageOverlay.classList.add('hidden');
+
+  document.removeEventListener('keydown', onImageLoadEscKeyDown);
+}
 
 export const configureUploadImageForm = () => {
   uploadImageInput.addEventListener('change', onImageSelect);

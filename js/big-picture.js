@@ -1,4 +1,4 @@
-import { isEscapeKey } from './utils/misc.js';
+import { onEscKeyDown } from './utils/misc.js';
 
 const bigPicture = document.querySelector('.big-picture');
 const closeButtonElement = bigPicture.querySelector('.big-picture__cancel');
@@ -8,13 +8,6 @@ const liElement = commentsElement.querySelector('li');
 
 const onCloseButtonClick = () => {
   closeBigPicture();
-};
-
-const onEscKeyDown = (evt) => {
-  if (isEscapeKey(evt)) {
-    evt.preventDefault();
-    closeBigPicture();
-  }
 };
 
 const getShowMoreClickHandler = (comments) => {
@@ -57,13 +50,15 @@ const fillTemplate = (photo) => {
   onShowMoreClick();
 };
 
+const onModalEscKeydown = (evt) => onEscKeyDown(evt, closeBigPicture);
+
 function closeBigPicture() {
   document.body.classList.remove('modal-open');
   bigPicture.classList.add('hidden');
 
   closeButtonElement.removeEventListener('click', onCloseButtonClick);
   showMoreElement.removeEventListener('click', onShowMoreClick);
-  document.removeEventListener('keydown', onEscKeyDown);
+  document.removeEventListener('keydown', onModalEscKeydown);
 }
 
 export const showBigPicture = (photo) => {
@@ -74,5 +69,5 @@ export const showBigPicture = (photo) => {
 
   showMoreElement.addEventListener('click', onShowMoreClick);
   closeButtonElement.addEventListener('click', onCloseButtonClick);
-  document.addEventListener('keydown', onEscKeyDown);
+  document.addEventListener('keydown', onModalEscKeydown);
 };

@@ -54,4 +54,12 @@ export const showAlert = (message) => {
 
   setTimeout(() => {
     alertContainer.remove();
-  }, ALERT_SHOW_TIME);}
+  }, ALERT_SHOW_TIME);
+};
+
+export const onEscKeyDown = (evt, cb) => {
+  if (isEscapeKey(evt)) {
+    evt.preventDefault();
+    cb();
+  }
+};
