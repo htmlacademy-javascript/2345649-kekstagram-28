@@ -71,6 +71,7 @@ const hashtagsIsUnique = (hashTags) => {
       if (cur === tag) {
         return ++acc;
       }
+      return acc;
     }, 0) > 1) {
       return false;
     }
