@@ -2,6 +2,7 @@ import { onEscKeyDown, isEscapeKey } from './utils/misc.js';
 import { initScaler, resetScale } from './scaler.js';
 import { initEffects, resetEffects } from './effects.js';
 import { showErrorModal, showSuccessModal } from './modal.js';
+import { uploadPhoto } from './api.js';
 
 const uploadImageInput = document.querySelector('#upload-file');
 const uploadImageOverlay = document.querySelector('.img-upload__overlay');
@@ -44,23 +45,16 @@ const onImageSubmit = (evt) => {
   evt.preventDefault();
   if (pristine.validate()) {
     blockSubmitButton();
-    fetch('https://28.javascript.pages.academy/kekstagram', {
-      method: 'POST',
-      body: new FormData(evt.target)
-    })
-      .then((response) => {
-        if (response.ok) {
-          showSuccessModal();
-          closeImageLoadModal();
-        } else {
-          throw new Error('Ошибка отправки данных');
-        }
+    uploadPhoto(new FormData(evt.target))
+      .then(() => {
+        showSuccessModal();
+        closeImageLoadModal();
       })
       .catch(() => {
         document.removeEventListener('keydown', onImageLoadEscKeyDown);
         showErrorModal(onImageLoadEscKeyDown);
-        unblockSubmitButton();
-      });
+      })
+      .finally(unblockSubmitButton);
   }
 };
 
@@ -101,7 +95,6 @@ const onImageSelect = () => {
 };
 
 function closeImageLoadModal () {
-  unblockSubmitButton();
   uploadImageForm.reset();
   document.body.classList.remove('modal-open');
   uploadImageOverlay.classList.add('hidden');
