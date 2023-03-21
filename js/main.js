@@ -1,7 +1,9 @@
 import { createThumbnails } from './thumbnails.js';
-import { generatePhotos } from './data.js';
 import { configureUploadImageForm } from './form.js';
+import { loadPhotos } from './api.js';
+import { showAlert } from './utils/misc.js';
 
-const dummyPhotos = generatePhotos();
-createThumbnails(dummyPhotos);
+loadPhotos()
+  .then((data) => createThumbnails(data))
+  .catch((err) => showAlert(err.message));
 configureUploadImageForm();
