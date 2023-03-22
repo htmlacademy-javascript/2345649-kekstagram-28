@@ -14,7 +14,6 @@ const sliderConfig = {
   connect: 'lower',
 };
 
-
 const getEffectPreviewClass = (it) => `effects__preview--${it}`;
 const effectNames = ['chrome', 'sepia', 'marvin', 'phobos', 'heat'];
 const classNames = effectNames.map(getEffectPreviewClass);
@@ -26,6 +25,7 @@ defaulEffect.apply = () => {
   imageUploadPreview.classList.remove(...classNames);
 };
 defaulEffect.updateLevel = () => {};
+
 const effects = {
   none: defaulEffect,
   chrome: new Effect('chrome', 0, 1, 0.1, 'grayscale'),
