@@ -25,9 +25,13 @@ export const createThumbnails = (photos) => {
     const thumbnail = createThumbnail(templateContent, photo);
     fragment.append(thumbnail);
   }
-
   const picturesContainer = document.querySelector('.pictures');
   const onThumbnailClick = getThumbnailClickHandler(photos);
   picturesContainer.addEventListener('click', onThumbnailClick);
   picturesContainer.append(fragment);
+};
+
+export const initThumbnailContainer = () => {
+
+
 };
